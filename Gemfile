@@ -7,4 +7,5 @@ gem 'json'
 
 group :test do
   gem 'rake'
+  gem 'codeclimate-test-reporter', require: nil
 end

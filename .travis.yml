@@ -2,3 +2,8 @@ language: ruby
 rvm:
   - 2.2.0
 sudo: false
+addon:
+  code_climate:
+    repo_token:
+      secure: "F51GpsjOtFB/Gi1xcBLL7rLJzZqUwKGxQx1FhaT5pxAPT8gCnj1klna5dU12TrND8MdytsYBIMEgh7iftem/IxC+XgPiyR+C8ZFgwb6gyPYf8UdSt4E2CfevlJ32yIAleycFUlal31l2MTafoVRSxmFPs51XV6M2R/vBDokDUOE="
+
