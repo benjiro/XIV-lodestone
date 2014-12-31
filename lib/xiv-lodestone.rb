@@ -2,8 +2,6 @@ require 'nokogiri'
 require 'open-uri'
 
 module XIVLodestone
-  VERSION = '0.0.1'
-
   class CharacterNotFound < RuntimeError
   end
 
