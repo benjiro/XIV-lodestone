@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'xiv-lodestone'
 
 describe XIVLodestone::Helper do
   it 'Find character from name and server' do
