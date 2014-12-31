@@ -1,5 +1,5 @@
 # Xiv::Lodestone
-
+[![Build Status](https://travis-ci.org/benjiro/XIV-lodestone.svg)](https://travis-ci.org/benjiro/XIV-lodestone)
 TODO: Write a gem description
 
 ## Installation
