@@ -40,4 +40,3 @@ module XIVLodestone
 
 end
 
-XIVLodestone::Helper.open_url("Benpirrrr", "Tonberry")
