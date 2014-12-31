@@ -1,5 +1,5 @@
 # Xiv::Lodestone
-[![Build Status](https://travis-ci.org/benjiro/XIV-lodestone.svg)](https://travis-ci.org/benjiro/XIV-lodestone)
+[![Build Status](https://travis-ci.org/benjiro/XIV-lodestone.svg)](https://travis-ci.org/benjiro/XIV-lodestone)[![Code Climate](https://codeclimate.com/github/benjiro/XIV-lodestone/badges/gpa.svg)](https://codeclimate.com/github/benjiro/XIV-lodestone)[![Test Coverage](https://codeclimate.com/github/benjiro/XIV-lodestone/badges/coverage.svg)](https://codeclimate.com/github/benjiro/XIV-lodestone)
 
 TODO: Write a gem description
 
