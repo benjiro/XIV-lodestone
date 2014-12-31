@@ -1,11 +1,11 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'xiv/lodestone/version'
+require 'xiv-lodestone'
 
 Gem::Specification.new do |spec|
   spec.name          = "xiv-lodestone"
-  spec.version       = Xiv::Lodestone::VERSION
+  spec.version       = XIVLodestone::VERSION
   spec.authors       = ["Benjamin Evenson"]
   spec.email         = ["bevenson@gmail.com"]
   spec.summary       = %q{A webscrapper for FFXIV:ARR lodestone website.}

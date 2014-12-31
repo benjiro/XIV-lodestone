@@ -1,4 +1,5 @@
 require 'spec_helper'
 
-describe Xiv::Lodestone do
+describe 'Say hello' do
+  XIVLodestone::Character.hi
 end
