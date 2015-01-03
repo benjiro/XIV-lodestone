@@ -1,24 +1,6 @@
 require 'nokogiri'
 
 module XIVLodestone
-  # Acts as a enum index position to item type
-  ITEM_SLOT = {
-    0 => :weapon,
-    1 => :head,
-    2 => :body,
-    3 => :hands,
-    4 => :waist,
-    5 => :legs,
-    6 => :feet,
-    7 => :shield,
-    8 => :necklace,
-    9 => :earrings,
-    10 => :bracelet,
-    11 => :ring1,
-    12 => :ring2,
-    13 => :soul_crystal
-  }
-
   class Parser
     # An exception for a invalid Nokogiri page
     class InvalidDocument < Exception
@@ -36,9 +18,9 @@ module XIVLodestone
     def get_classes()
       class_list = Hash.new
       @page.xpath('//td').each_slice(3) do |tr|
-        class_list[tr[0].text.to_sym] = tr[1].text.to_i unless tr[0].text.empty?; class_list
+        class_list[tr[0].text.to_sym] = tr[1].text.to_i unless tr[0].text.empty?
       end
-      class_list
+      class_list.empty? ? nil : class_list
     end
     # Returns a #Hash of the character attributes
     # Example { :str => 243, ... }
@@ -53,19 +35,35 @@ module XIVLodestone
           stats[ele[0].to_sym] = ele[1].to_i
         end
       end
-      stats
+      stats.empty? ? nil : stats
     end
     # Returns a #Hash of the characters gear list
     # Example { :head => [ "item_name", "item_url" ], ... }
     # If no gear found returns a empty #Hash
     def get_gear()
-      # TODO: Fix so that classes without a shield aren't assigned to the wrong positions
+      # TODO: Smelly code, rewrite
       items = Hash.new
-      @page.text =~ /shield/i ? num = 15 : num = 14
-      @page.xpath("(//div[@class='item_detail_box'])[position() < #{num}]").each_with_index do |item, index|
-        items[ITEM_SLOT[index]] = [item.css('h2').text , "http://na.finalfantasyxiv.com#{item.css('a')[0]['href']}"]
+      ring_count = 1
+      @page.xpath("(//div[@class='item_detail_box'])[position() < 15]").each_with_index do |item, index|
+        type = get_item_type(item.at_css('h3.category_name').text)
+        if type.eql? "ring"
+          items["#{type}#{ring_count}".to_sym] = [item.css('h2').text , "http://na.finalfantasyxiv.com#{item.css('a')[0]['href']}"]
+          ring_count += 1
+        else
+          items[type.to_sym] = [item.css('h2').text , "http://na.finalfantasyxiv.com#{item.css('a')[0]['href']}"]
+        end
       end
-      items
+      items.empty? ? nil : items
+    end
+    # Returns a string representing what item it is
+    def get_item_type(item_name)
+      if item_name =~ /(Arm|Arms|Grimoire|Primary Tool)/i
+        return "weapon"
+      elsif item_name =~ /Shield/i
+        return "shield"
+      else
+        return item_name.downcase
+      end
     end
     # Returns a #Integer of the characters hp
     # otherwise returns nil
