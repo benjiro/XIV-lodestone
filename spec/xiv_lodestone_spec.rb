@@ -4,6 +4,14 @@ require 'xiv_lodestone'
 LOCAL_FILE = File.join(File.dirname(__FILE__), "resources/character.html")
 INVALID_FILE = File.join(File.dirname(__FILE__), "resources/invalid.html")
 
+describe XIVLodestone::Character do
+  let(:character) { XIVLodestone::Character.new("Benpi Kancho", "Tonberry") }
+
+  it 'Character profile found' do
+    expect(character.nil?).to eql(false)
+  end
+end
+
 describe XIVLodestone::Helper do
   it 'Find character from name and server' do
     page = XIVLodestone::Helper.open_url("Benpi Kancho", "Tonberry")
