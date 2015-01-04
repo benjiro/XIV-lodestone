@@ -36,6 +36,33 @@ describe XIVLodestone::Helper do
   end
 end
 
+describe XIVLodestone::Character do
+  let(:character) { XIVLodestone::Character.new("Pocket Rocket", "Tonberry") }
+
+  it 'Character methods check' do
+    expect(character.city).to eql("Ul'dah")
+    # TODO Add full test of API
+  end
+
+  it 'GearList class check' do
+    list = XIVLodestone::GearList.new({:weapon => ["Fist", 110, "Weapon", "http://..."]})
+    expect(list.weapon.name).to eql("Fist")
+    expect(list.weapon.ilevel).to eql(110)
+    expect(list.weapon.slot).to eql("Weapon")
+    expect(list.weapon.url).to eql("http://...")
+  end
+
+  it 'DiscipleList class check' do
+    list = XIVLodestone::DiscipleList.new({:rogue => ["Rogue", 1, 0, 300, "http://..."]})
+    expect(list.rogue.name).to eql("Rogue")
+    expect(list.rogue.level).to eql(1)
+    expect(list.rogue.current_exp).to eql(0)
+    expect(list.rogue.total_exp).to eql(300)
+    expect(list.rogue.icon_url).to eql("http://...")
+    expect(list.rogue.next_level).to eql(300)
+  end
+end
+
 describe XIVLodestone::Parser do
   let(:parser) { XIVLodestone::Parser.new(Nokogiri::HTML(File.open(LOCAL_FILE))) }
   let(:invalid) { XIVLodestone::Parser.new(Nokogiri::HTML(File.open(INVALID_FILE))) }
@@ -55,46 +82,18 @@ describe XIVLodestone::Parser do
     expect(invalid.get_guardian()).to eql(nil)
     expect(invalid.get_city()).to eql(nil)
     expect(invalid.get_grand_company()).to eql(nil)
-    expect(invalid.get_classes()).to eql(nil)
-    expect(invalid.get_attributes()).to eql(nil)
-    expect(invalid.get_gear()).to eql(nil)
+    expect(invalid.get_classes()).to eql({})
+    expect(invalid.get_attributes()).to eql({})
+    expect(invalid.get_gear()).to eql({})
     end
 
   it 'Sucessful parse methods' do
     expect(parser.get_item_type("Ring")).to eql("ring")
     expect(parser.get_item_type("Two-handed Conjurer's Arm")).to eql("weapon")
     expect(parser.get_item_type("Shield")).to eql("shield")
-    expect(parser.get_classes()).to eql({:Gladiator=>1, :Pugilist=>6,
-      :Marauder=>1, :Lancer=>1, :Archer=>1, :Rogue=>0, :Conjurer=>50,
-      :Thaumaturge=>26, :Arcanist=>50, :Carpenter=>1, :Blacksmith=>1,
-      :Armorer=>1, :Goldsmith=>22, :Leatherworker=>1, :Weaver=>16,
-      :Alchemist=>20, :Culinarian=>1, :Miner=>1, :Botanist=>50, :Fisher=>5}
-    )
-    expect(parser.get_attributes()).to eql({:str=>109, :dex=>213, :vit=>422,
-      :int=>211, :mnd=>539, :pie=>408, :Fire=>270, :Ice=>267, :Wind=>271,
-      :Earth=>269, :Lightning=>269, :Water=>269, :Accuracy=>405,
-      :"Critical Hit Rate"=>424, :Determination=>320, :Defense=>318,
-      :Parry=>341, :"Magic Defense"=>545, :"Attack Power"=>109,
-      :"Skill Speed"=>341, :"Attack Magic Potency"=>211,
-      :"Healing Magic Potency"=>539, :"Spell Speed"=>415,
-      :"Slow Resistance"=>0, :"Silence Resistance"=>0, :"Blind Resistance"=>0,
-      :"Poison Resistance"=>0, :"Stun Resistance"=>0, :"Sleep Resistance"=>0,
-      :"Bind Resistance"=>0, :"Heavy Resistance"=>0, :Slashing=>100,
-      :Piercing=>100, :Blunt=>100})
-    expect(parser.get_gear()).to eql (
-    {:weapon=>["Yagrush", "http://na.finalfantasyxiv.com/lodestone/playguide/db/item/774f3c096da/"],
-     :head=>["Weathered Daystar Circlet", "http://na.finalfantasyxiv.com/lodestone/playguide/db/item/0bb88cb2693/"],
-     :body=>["Scylla's Robe of Healing", "http://na.finalfantasyxiv.com/lodestone/playguide/db/item/0c45cdcda37/"],
-     :hands=>["Weathered Daystar Gloves", "http://na.finalfantasyxiv.com/lodestone/playguide/db/item/ec2ddbdcd47/"],
-     :waist=>["Daystar Belt", "http://na.finalfantasyxiv.com/lodestone/playguide/db/item/9804bb03aaf/"],
-     :legs=>["Daystar Breeches", "http://na.finalfantasyxiv.com/lodestone/playguide/db/item/9280701e6ba/"],
-     :feet=>["High Allagan Thighboots of Healing", "http://na.finalfantasyxiv.com/lodestone/playguide/db/item/77060a25e03/"],
-     :necklace=>["Daystar Necklace", "http://na.finalfantasyxiv.com/lodestone/playguide/db/item/534d3e2f0fd/"],
-     :earrings=>["High Allagan Earrings of Healing", "http://na.finalfantasyxiv.com/lodestone/playguide/db/item/ba581d18070/"],
-     :bracelets=>["Daystar Armillae", "http://na.finalfantasyxiv.com/lodestone/playguide/db/item/d0f33b5c4bf/"],
-     :ring1=>["Ironworks Ring of Healing", "http://na.finalfantasyxiv.com/lodestone/playguide/db/item/7beab721371/"],
-     :ring2=>["Daystar Ring", "http://na.finalfantasyxiv.com/lodestone/playguide/db/item/5b78525af6f/"],
-     :"soul crystal"=>["Soul of the White Mage", "http://na.finalfantasyxiv.com/lodestone/playguide/db/item/9cca5eb0fd2/"]})
+    expect(parser.get_classes().count).to eql(20)
+    expect(parser.get_attributes().count).to eql(34)
+    expect(parser.get_gear().count).to eql (12)
     expect(parser.get_hp()).to eql(4975)
     expect(parser.get_mp()).to eql(4819)
     expect(parser.get_tp()).to eql(1000)
@@ -107,5 +106,6 @@ describe XIVLodestone::Parser do
     expect(parser.get_grand_company()).to eql("Immortal Flames/Second Flame Lieutenant")
     expect(parser.get_free_company()).to eql(["Nomad Moogles",
                                               "http://na.finalfantasyxiv.com/lodestone/freecompany/9233505136016403440/"])
+    expect(parser.replace_downcase("Hello World")).to eql("hello_world")
   end
 end

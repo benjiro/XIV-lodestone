@@ -2,7 +2,7 @@ require 'xiv_lodestone/lodestone_helper'
 require 'xiv_lodestone/lodestone_parser'
 
 module XIVLodestone
-  # This class is a representation of a FFXIV:ARR character,
+  # A Object that representation a FFXIV:ARR character,
   # all information is obtained from the lodestone website.
   class Character
     def initialize(*args)
@@ -14,27 +14,101 @@ module XIVLodestone
       else
         fail ArgumentError, "Invalid Arguments: player_id(Fixnum) or player_name(String), server_name(String)]"
       end
-      generate_character(parser)
+
+      @profile = Hash.new
+      @profile[:disciple] = DiscipleList.new(parser.get_classes)
+      @profile[:gear] = GearList.new(parser.get_gear)
+      @profile.merge!(parser.get_attributes)
+      @profile[:hp] = parser.get_hp
+      @profile[:mp] = parser.get_mp
+      @profile[:tp] = parser.get_tp
+      @profile[:sex] = parser.get_sex
+      @profile[:race] = parser.get_race
+      @profile[:clan] = parser.get_clan
+      @profile[:nameday] = parser.get_nameday
+      @profile[:guardian] = parser.get_guardian
+      @profile[:city] = parser.get_city
+      @profile[:grand_company] = parser.get_grand_company
+      @profile[:free_company] = parser.get_free_company
+
+      parser = nil #Close the reference so Nokogiri cleans up itself
     end
 
-    def generate_character(parser)
-      @classes = parser.get_classes
-      @attributes = parser.get_attributes
-      @gear = parser.get_gear
-      @hp = parser.get_hp
-      @mp = parser.get_mp
-      @tp = parser.get_tp
-      @sex = parser.get_sex
-      @race = parser.get_race
-      @clan = parser.get_clan
-      @nameday = parser.get_nameday
-      @guardian = parser.get_guardian
-      @city = parser.get_city
-      @grand = parser.get_grand_company
-      @free = parser.get_free_company
-      parser = nil
+    def method_missing(method)
+      return @profile[method] if @profile.key?(method)
+      super
     end
+  end
+  # A Object that represents a list of Gear pieces
+  # The initialiser takes a hash of items in the following layout
+  # { :weapon => ["Fist", 110, "Weapon", "http://...."], ... }
+  class GearList
+    def initialize(gear_list)
+      @list = Hash.new
+      gear_list.each do |key, value|
+        gear = Gear.new(value[0], value[1], value[2], value[3])
+        @list[key] = gear
+      end
+    end
+    # Calculates the total gear list ilevel
+    # Rounds to the nearest whole number like FFXIV ingame calculation
+    # returns a #Integer
+    def ilevel()
+      ilevel = 0
+      @list.each_value do |value|
+        ilevel += value.ilevel
+      end
+      (@list.key?(:shield)) ? (ilevel/13).round : (ilevel/12).round
+    end
+    # Generates access methods for each item slot
+    def method_missing(method)
+      return @list[method] if @list.key?(method)
+      super
+    end
+    # A object representation of a peacie of gear.
+    # TODO Add more information
+    class Gear
+      attr_reader :name, :ilevel, :slot, :url
 
-    private :generate_character
+      def initialize(name, ilevel, slot, url)
+        @name = name
+        @ilevel = ilevel
+        @slot = slot
+        @url = url
+      end
+    end
+  end
+  # A object representation of disciples(classes)
+  # The initialiser takes a hash of Disciple, that layout follows
+  # { :rogue => ["Rogue", 1, 0, 300, "http://..."] }
+  class DiscipleList
+    def initialize(disciple_list)
+      @list = Hash.new
+      disciple_list.each do |key, value|
+        disciple = Disciple.new(value[0], value[1], value[2], value[3], value[4])
+        @list[key.to_sym] = disciple
+      end
+      # Generates access methods for each disciple slot
+      def method_missing(method)
+        return @list[method] if @list.key?(method)
+        super
+      end
+    end
+    # A object representation of a disciple
+    class Disciple
+      attr_reader :name, :level, :current_exp, :total_exp, :icon_url
+
+      def initialize(name, level, curr, req, icon)
+        @name = name
+        @level = level
+        @current_exp = curr
+        @total_exp = req
+        @icon_url = icon
+      end
+      # Returns the required experience to the next level
+      def next_level()
+        @total_exp - @current_exp
+      end
+    end
   end
 end

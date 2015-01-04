@@ -17,10 +17,19 @@ module XIVLodestone
     # If no classes found returns a empty #Hash
     def get_classes()
       class_list = Hash.new
-      @page.xpath('//td').each_slice(3) do |tr|
-        class_list[tr[0].text.to_sym] = tr[1].text.to_i unless tr[0].text.empty?
+      @page.xpath('//table[@class="class_list"]/tr/td').each_slice(3) do |td|
+        # Not a valid class
+        next if td[0].text.empty?
+
+        name = td[0].text
+        level = td[1].text.to_i
+        exp = td[2].text.split(/\//)
+        icon = td[0].at_css('img')['src']
+
+        class_list[name.downcase.to_sym] = [name, level, exp[0].to_i,
+                   exp[1].to_i, icon]
       end
-      class_list.empty? ? nil : class_list
+      class_list
     end
     # Returns a #Hash of the character attributes
     # Example { :str => 243, ... }
@@ -29,13 +38,13 @@ module XIVLodestone
       stats = Hash.new
       @page.xpath('//div[starts-with(@class, "param_left_area_inner")]/ul/li').each_with_index do |li, index|
         if index < 6
-          stats[li['class'].to_sym] = li.text.to_i
+          stats[replace_downcase(li['class']).to_sym] = li.text.to_i
         else
           ele = li.text.split(/(?<=\D)(?=\d)/)
-          stats[ele[0].to_sym] = ele[1].to_i
+          stats[replace_downcase(ele[0]).to_sym] = ele[1].to_i
         end
       end
-      stats.empty? ? nil : stats
+      stats
     end
     # Returns a #Hash of the characters gear list
     # Example { :head => [ "item_name", "item_url" ], ... }
@@ -44,16 +53,17 @@ module XIVLodestone
       # TODO: Smelly code, rewrite
       items = Hash.new
       ring_count = 1
-      @page.xpath("(//div[@class='item_detail_box'])[position() < 15]").each_with_index do |item, index|
+      @page.xpath("(//div[@class='item_detail_box'])[position() < 13]").each_with_index do |item, index|
         type = get_item_type(item.at_css('h3.category_name').text)
+        level = item.xpath('//div[@class="pt3 pb3"]')[index].text.split(/ /).last.to_i
         if type.eql? "ring"
-          items["#{type}#{ring_count}".to_sym] = [item.css('h2').text , "http://na.finalfantasyxiv.com#{item.css('a')[0]['href']}"]
+          items["#{type}#{ring_count}".to_sym] = [item.css('h2').text, level, type, "http://na.finalfantasyxiv.com#{item.css('a')[0]['href']}"]
           ring_count += 1
         else
-          items[type.to_sym] = [item.css('h2').text , "http://na.finalfantasyxiv.com#{item.css('a')[0]['href']}"]
+          items[replace_downcase(type).to_sym] = [item.css('h2').text, level, type, "http://na.finalfantasyxiv.com#{item.css('a')[0]['href']}"]
         end
       end
-      items.empty? ? nil : items
+      items
     end
     # Returns a string representing what item it is
     def get_item_type(item_name)
@@ -135,6 +145,11 @@ module XIVLodestone
     def get_free_company()
       element = @page.at_xpath('//dd[@class="txt_name"]/a')
       element.nil? ? nil : [ element.text, "http://na.finalfantasyxiv.com#{element['href']}" ]
+    end
+    # Replaces spaces wtih underscores, and downcases
+    # Returns a #String
+    def replace_downcase(string)
+      string.gsub(" ", "_").downcase
     end
   end
 end
