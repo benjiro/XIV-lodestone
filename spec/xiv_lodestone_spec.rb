@@ -63,12 +63,12 @@ describe XIVLodestone::Character do
   end
 end
 
-describe XIVLodestone::Parser do
-  let(:parser) { XIVLodestone::Parser.new(Nokogiri::HTML(File.open(LOCAL_FILE))) }
-  let(:invalid) { XIVLodestone::Parser.new(Nokogiri::HTML(File.open(INVALID_FILE))) }
+describe XIVLodestone::CharacterParser do
+  let(:parser) { XIVLodestone::CharacterParser.new(Nokogiri::HTML(File.open(LOCAL_FILE))) }
+  let(:invalid) { XIVLodestone::CharacterParser.new(Nokogiri::HTML(File.open(INVALID_FILE))) }
 
   it 'Nil initializer to parser' do
-    expect { XIVLodestone::Parser.new(nil) }.to raise_error(XIVLodestone::Parser::InvalidDocument)
+    expect { XIVLodestone::CharacterParser.new(nil) }.to raise_error(XIVLodestone::CharacterParser::InvalidDocument)
   end
 
   it 'Invalid parse methods' do

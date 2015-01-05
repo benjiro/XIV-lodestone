@@ -1,5 +1,5 @@
 require 'xiv_lodestone/lodestone_helper'
-require 'xiv_lodestone/lodestone_parser'
+require 'xiv_lodestone/lodestone_character_parser'
 
 module XIVLodestone
   # A Object that representation a FFXIV:ARR character,
@@ -8,19 +8,15 @@ module XIVLodestone
     def initialize(*args)
       parser = nil
       if args.count == 1 && args.all? {|x| x.is_a? Fixnum}
-        parser = Parser.new(Helper.open_id(args.first))
+        parser = CharacterParser.new(Helper.open_id(args.first))
       elsif args.count == 2 && args.all? {|x| x.is_a? String}
-        parser = Parser.new(Helper.open_url(args.at(0), args.at(1)))
+        parser = CharacterParser.new(Helper.open_url(args.at(0), args.at(1)))
       else
         fail ArgumentError, "Invalid Arguments: player_id(Fixnum) or player_name(String), server_name(String)]"
       end
 
-      @profile = Hash.new
-      @profile[:disciple] = DiscipleList.new(parser.get_classes)
-      @profile[:gear] = GearList.new(parser.get_gear)
-      @profile.merge!(parser.get_attributes)
-      @profile.merge!(parser.get_profile)
-
+      @profile = Hash.new()
+      initialise_profile()
       parser = nil #Close the reference so Nokogiri cleans up itself
     end
     # Returns a #String with characters first name
@@ -36,6 +32,15 @@ module XIVLodestone
       return @profile[method] if @profile.key?(method)
       super
     end
+
+    def initialise_profile()
+      @profile[:disciple] = DiscipleList.new(parser.get_classes)
+      @profile[:gear] = GearList.new(parser.get_gear)
+      @profile.merge!(parser.get_attributes)
+      @profile.merge!(parser.get_profile)
+    end
+
+    private :initialise_profile
   end
   # A Object that represents a list of Gear pieces
   # The initialiser takes a hash of items in the following layout

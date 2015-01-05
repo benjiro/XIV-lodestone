@@ -1,7 +1,7 @@
 require 'nokogiri'
 
 module XIVLodestone
-  class Parser
+  class CharacterParser
     # An exception for a invalid Nokogiri page
     class InvalidDocument < Exception
     end
