@@ -25,6 +25,11 @@ module XIVLodestone
     def self.open_id(id)
       Nokogiri::HTML(open_id_url(id))
     end
+    # Checks string if two handed weapon type
+    # returns true if two handed weapon type
+    def self.is_2hand_weapon(name)
+      (name =~ /(Arm|Arms|Grimoire|Primary Tool)/i) ? true : false
+    end
     # Open a URL with the given name and server.
     # Returns a file stream.
     def self.open_character_url(name, server)

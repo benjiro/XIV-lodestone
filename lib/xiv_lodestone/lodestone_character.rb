@@ -55,10 +55,11 @@ module XIVLodestone
     # returns a #Integer
     def ilevel()
       ilevel = 0
+      ilevel = @list[:weapon].ilevel if Helper.is_2hand_weapon(@list[:weapon].slot)
       @list.each_value do |value|
         ilevel += value.ilevel
       end
-      (@list.key?(:shield)) ? (ilevel/13).round : (ilevel/12).round
+      (ilevel/13).round
     end
     # Generates access methods for each item slot
     def method_missing(method)

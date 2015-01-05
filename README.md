@@ -1,6 +1,8 @@
-# XIVLodestone - A simple FFXIV lodestone scraper [![Build Status](https://travis-ci.org/benjiro/XIV-lodestone.svg)](https://travis-ci.org/benjiro/XIV-lodestone) [![Code Climate](https://codeclimate.com/github/benjiro/XIV-lodestone/badges/gpa.svg)](https://codeclimate.com/github/benjiro/XIV-lodestone) [![Test Coverage](https://codeclimate.com/github/benjiro/XIV-lodestone/badges/coverage.svg)](https://codeclimate.com/github/benjiro/XIV-lodestone)
+# XIVLodestone - A simple FFXIV lodestone scraper [![Build Status](https://travis-ci.org/benjiro/XIV-lodestone.svg)](https://travis-ci.org/benjiro/XIV-lodestone) [![Code Climate](https://codeclimate.com/github/benjiro/XIV-lodestone/badges/gpa.svg)](https://codeclimate.com/github/benjiro/XIV-lodestone) [![Test Coverage](https://codeclimate.com/github/benjiro/XIV-lodestone/badges/coverage.svg)](https://codeclimate.com/github/benjiro/XIV-lodestone) [![Dependency Status](https://gemnasium.com/benjiro/XIV-lodestone.svg)](https://gemnasium.com/benjiro/XIV-lodestone)
 
 A simple API for scraping information from FFXIV lodestone community website.
+
+Please note this gem is currently in Alpha stage of development expect bugs, submit a issue for bug or feature requests.
 
 ## Features
 - Character Search (via ID number or Name and Server)

@@ -88,9 +88,6 @@ describe XIVLodestone::Parser do
     end
 
   it 'Sucessful parse methods' do
-    expect(parser.get_item_type("Ring")).to eql("ring")
-    expect(parser.get_item_type("Two-handed Conjurer's Arm")).to eql("weapon")
-    expect(parser.get_item_type("Shield")).to eql("shield")
     expect(parser.get_classes().count).to eql(20)
     expect(parser.get_attributes().count).to eql(34)
     expect(parser.get_gear().count).to eql (12)
@@ -106,6 +103,5 @@ describe XIVLodestone::Parser do
     expect(parser.get_grand_company()).to eql("Immortal Flames/Second Flame Lieutenant")
     expect(parser.get_free_company()).to eql(["Nomad Moogles",
                                               "http://na.finalfantasyxiv.com/lodestone/freecompany/9233505136016403440/"])
-    expect(parser.replace_downcase("Hello World")).to eql("hello_world")
   end
 end

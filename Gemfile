@@ -2,10 +2,9 @@ source 'https://rubygems.org'
 
 gemspec
 
-gem 'nokogiri'
-gem 'json'
+gem 'nokogiri', '~> 1.6.5'
 
 group :test do
-  gem 'rake'
+  gem 'rspec', '~> 3.1'
   gem 'codeclimate-test-reporter', require: nil
 end

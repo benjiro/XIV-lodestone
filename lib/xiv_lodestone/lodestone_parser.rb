@@ -20,14 +20,13 @@ module XIVLodestone
       @page.xpath('//table[@class="class_list"]/tr/td').each_slice(3) do |td|
         # Not a valid class
         next if td[0].text.empty?
-
-        name = td[0].text
-        level = td[1].text.to_i
         exp = td[2].text.split(/\//)
-        icon = td[0].at_css('img')['src']
 
-        class_list[name.downcase.to_sym] = [name, level, exp[0].to_i,
-                   exp[1].to_i, icon]
+        class_list[td[0].text.downcase.to_sym] = [td[0].text,
+          td[1].text.to_i,
+          exp[0].to_i,
+          exp[1].to_i,
+          td[0].at_css('img')['src']]
       end
       class_list
     end
@@ -50,30 +49,15 @@ module XIVLodestone
     # Example { :head => [ "item_name", "item_url" ], ... }
     # If no gear found returns a empty #Hash
     def get_gear()
-      # TODO: Smelly code, rewrite
       items = Hash.new
-      ring_count = 1
-      @page.xpath("(//div[@class='item_detail_box'])[position() < 13]").each_with_index do |item, index|
+      @page.xpath("(//div[@class='item_detail_box'])[position() < 13]").each do |item|
         type = get_item_type(item.at_css('h3.category_name').text)
-        level = item.xpath('//div[@class="pt3 pb3"]')[index].text.split(/ /).last.to_i
-        if type.eql? "ring"
-          items["#{type}#{ring_count}".to_sym] = [item.css('h2').text, level, type, "http://na.finalfantasyxiv.com#{item.css('a')[0]['href']}"]
-          ring_count += 1
-        else
-          items[replace_downcase(type).to_sym] = [item.css('h2').text, level, type, "http://na.finalfantasyxiv.com#{item.css('a')[0]['href']}"]
-        end
+        items[type.to_sym] = [ item.css('h2').text,
+          item.at_css('div.pt3.pb3').text.split(/ /).last.to_i,
+          item.at_css('h3.category_name').text,
+          "http://na.finalfantasyxiv.com#{item.css('a')[0]['href']}" ]
       end
       items
-    end
-    # Returns a string representing what item it is
-    def get_item_type(item_name)
-      if item_name =~ /(Arm|Arms|Grimoire|Primary Tool)/i
-        return "weapon"
-      elsif item_name =~ /Shield/i
-        return "shield"
-      else
-        return item_name.downcase
-      end
     end
     # Returns a #Integer of the characters hp
     # otherwise returns nil
@@ -151,5 +135,24 @@ module XIVLodestone
     def replace_downcase(string)
       string.gsub(" ", "_").downcase
     end
+    # Auto-increaments between 1 and 2
+    def ring
+      @num ||= 0
+      @num = 0 if @num >= 2
+      @num += 1
+    end
+    # Returns a string representing what item type it is
+    def get_item_type(item_name)
+      if item_name =~ /(Arm|Arms|Grimoire|Primary Tool)/i
+        return "weapon"
+      elsif item_name =~ /Shield/i
+        return "shield"
+      elsif item_name.eql?("Ring")
+        return "ring#{ring}"
+      else
+        return item_name.downcase
+      end
+    end
+    private :replace_downcase, :ring, :get_item_type
   end
 end
