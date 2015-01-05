@@ -59,6 +59,50 @@ module XIVLodestone
       end
       items
     end
+    # Returns a #Hash of the characters profile
+    def get_profile()
+      profile = Hash.new
+      profile[:name] = get_name
+      profile[:introduction] = get_introduction
+      profile[:title] = get_title
+      profile[:portrait] = get_portrait
+      profile[:hp] = get_hp
+      profile[:mp] = get_mp
+      profile[:tp] = get_tp
+      profile[:sex] = get_sex
+      profile[:race] = get_race
+      profile[:clan] = get_clan
+      profile[:nameday] = get_nameday
+      profile[:guardian] = get_guardian
+      profile[:city] = get_city
+      profile[:grand_company] = get_grand_company
+      profile[:free_company] = get_free_company
+      profile
+    end
+    # Returns a #String of the character portrait
+    # otherwise returns nil
+    def get_portrait()
+      url = @page.at_xpath('//div[@class="img_area bg_chara_264"]/img')
+      url.nil? ? nil : url['src']
+    end
+    # Returns a #String of the character name
+    # otherwise returns nil
+    def get_name()
+      name = @page.at_xpath('//h2/a')
+      name.nil? ? nil : name.text
+    end
+    # Returns a #String of character title
+    # otherwise returns nil
+    def get_title()
+      title = @page.at_xpath('//h2/div')
+      title.nil? ? nil : title.text
+    end
+    # Returns a #String of character introduction
+    # otherwise returns nil
+    def get_introduction()
+      intro = @page.at_xpath('//div[@class="area_inner_body txt_selfintroduction"]')
+      intro.nil? ? nil : intro.text.strip!
+    end
     # Returns a #Integer of the characters hp
     # otherwise returns nil
     def get_hp()

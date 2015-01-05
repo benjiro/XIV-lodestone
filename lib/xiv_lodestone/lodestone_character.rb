@@ -19,19 +19,17 @@ module XIVLodestone
       @profile[:disciple] = DiscipleList.new(parser.get_classes)
       @profile[:gear] = GearList.new(parser.get_gear)
       @profile.merge!(parser.get_attributes)
-      @profile[:hp] = parser.get_hp
-      @profile[:mp] = parser.get_mp
-      @profile[:tp] = parser.get_tp
-      @profile[:sex] = parser.get_sex
-      @profile[:race] = parser.get_race
-      @profile[:clan] = parser.get_clan
-      @profile[:nameday] = parser.get_nameday
-      @profile[:guardian] = parser.get_guardian
-      @profile[:city] = parser.get_city
-      @profile[:grand_company] = parser.get_grand_company
-      @profile[:free_company] = parser.get_free_company
+      @profile.merge!(parser.get_profile)
 
       parser = nil #Close the reference so Nokogiri cleans up itself
+    end
+    # Returns a #String with characters first name
+    def first_name()
+      @profile[:name].split(/ /).first
+    end
+    # Returns a #String with characters last name
+    def last_name()
+      @profile[:name].split(/ /).last
     end
 
     def method_missing(method)
