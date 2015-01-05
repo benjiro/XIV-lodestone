@@ -16,7 +16,7 @@ module XIVLodestone
       end
 
       @profile = Hash.new()
-      initialise_profile()
+      initialise_profile(parser)
       parser = nil #Close the reference so Nokogiri cleans up itself
     end
     # Returns a #String with characters first name
@@ -33,7 +33,7 @@ module XIVLodestone
       super
     end
 
-    def initialise_profile()
+    def initialise_profile(parser)
       @profile[:disciple] = DiscipleList.new(parser.get_classes)
       @profile[:gear] = GearList.new(parser.get_gear)
       @profile.merge!(parser.get_attributes)
