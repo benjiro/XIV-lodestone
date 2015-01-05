@@ -63,6 +63,7 @@ module XIVLodestone
     def get_profile()
       profile = Hash.new
       profile[:name] = get_name
+      profile[:server] = get_server
       profile[:introduction] = get_introduction
       profile[:title] = get_title
       profile[:portrait] = get_portrait
@@ -78,6 +79,12 @@ module XIVLodestone
       profile[:grand_company] = get_grand_company
       profile[:free_company] = get_free_company
       profile
+    end
+    # Returns a #String of the character portrait
+    # otherwise returns nil
+    def get_server()
+      name = @page.at_xpath('//h2/span')
+      name.nil? ? nil : name.text.strip.gsub(/\(|\)/, "")
     end
     # Returns a #String of the character portrait
     # otherwise returns nil

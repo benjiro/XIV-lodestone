@@ -1,5 +1,6 @@
 require 'xiv_lodestone/lodestone_helper'
 require 'xiv_lodestone/lodestone_character_parser'
+require 'oj'
 
 module XIVLodestone
   # A Object that representation a FFXIV:ARR character,
@@ -9,6 +10,8 @@ module XIVLodestone
       parser = nil
       if args.count == 1 && args.all? {|x| x.is_a? Fixnum}
         parser = CharacterParser.new(Helper.open_id(args.first))
+      elsif args.count == 1 && args.all? {|x| x.is_a? String}
+        parser = CharacterParser.new(Helper.open_url(args.first, ""))
       elsif args.count == 2 && args.all? {|x| x.is_a? String}
         parser = CharacterParser.new(Helper.open_url(args.at(0), args.at(1)))
       else
@@ -31,6 +34,10 @@ module XIVLodestone
     def method_missing(method)
       return @profile[method] if @profile.key?(method)
       super
+    end
+    # Uses gem Oj to dump Character Object to JSON
+    def to_json()
+      Oj.dump(@profile)
     end
 
     def initialise_profile(parser)
@@ -64,6 +71,10 @@ module XIVLodestone
       end
       (ilevel/13).round
     end
+    # Uses gem Oj to dump GearList Object to JSON
+    def to_json()
+      Oj.dump(@list)
+    end
     # Generates access methods for each item slot
     def method_missing(method)
       return @list[method] if @list.key?(method)
@@ -91,6 +102,10 @@ module XIVLodestone
       disciple_list.each do |key, value|
         disciple = Disciple.new(value[0], value[1], value[2], value[3], value[4])
         @list[key.to_sym] = disciple
+      end
+      # Uses gem Oj to dump DiscipleList Object to JSON
+      def to_json()
+        Oj.dump(@list)
       end
       # Generates access methods for each disciple slot
       def method_missing(method)
