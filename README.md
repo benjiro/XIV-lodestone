@@ -18,6 +18,7 @@ submit a issue for bug or feature requests.
   - All character attributes
 
 ## TODO
+- Server Status parser
 - Job detection, soul crystal
 - To Json functionality
 - Achievements, Blogs, Friends list, Mounts, Pets

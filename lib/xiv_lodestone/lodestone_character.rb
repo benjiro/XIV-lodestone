@@ -1,26 +1,16 @@
 require 'xiv_lodestone/lodestone_helper'
-require 'xiv_lodestone/lodestone_character_parser'
-require 'oj'
+require 'xiv_lodestone/lodestone_character_gear'
+require 'xiv_lodestone/lodestone_character_disciple'
+require 'xiv_lodestone/lodestone_character_attribute'
+require 'xiv_lodestone/lodestone_character_mount'
 
 module XIVLodestone
-  # A Object that representation a FFXIV:ARR character,
+  # A Object that represents a FFXIV:ARR character,
   # all information is obtained from the lodestone website.
   class Character
     def initialize(*args)
-      parser = nil
-      if args.count == 1 && args.all? {|x| x.is_a? Fixnum}
-        parser = CharacterParser.new(Helper.open_id(args.first))
-      elsif args.count == 1 && args.all? {|x| x.is_a? String}
-        parser = CharacterParser.new(Helper.open_url(args.first, ""))
-      elsif args.count == 2 && args.all? {|x| x.is_a? String}
-        parser = CharacterParser.new(Helper.open_url(args.at(0), args.at(1)))
-      else
-        fail ArgumentError, "Invalid Arguments: player_id(Fixnum) or player_name(String), server_name(String)]"
-      end
-
       @profile = Hash.new()
-      initialise_profile(parser)
-      parser = nil #Close the reference so Nokogiri cleans up itself
+      initialise_profile(Helper.process_args(args))
     end
     # Returns a #String with characters first name
     def first_name()
@@ -29,6 +19,14 @@ module XIVLodestone
     # Returns a #String with characters last name
     def last_name()
       @profile[:name].split(/ /).last
+    end
+
+    def mounts()
+      @mounts.list
+    end
+
+    def minions()
+      @minions.list
     end
 
     def method_missing(method)
@@ -40,94 +38,15 @@ module XIVLodestone
       Oj.dump(@profile)
     end
 
-    def initialise_profile(parser)
-      @profile[:disciple] = DiscipleList.new(parser.get_classes)
-      @profile[:gear] = GearList.new(parser.get_gear)
-      @profile.merge!(parser.get_attributes)
-      @profile.merge!(parser.get_profile)
+    def initialise_profile(page)
+      @profile[:disciple] = DiscipleList.new(page.xpath("//table[@class='class_list']/tr/td"))
+      @profile[:gear] = GearList.new(page.xpath("(//div[@class='item_detail_box'])[position() < 13]"))
+      @profile[:attribute] = AttributeList.new(page.xpath('//div[starts-with(@class, "param_left_area_inner")]/ul/li'))
+      @mounts = MountList.new(page.xpath('(//div[@class="minion_box clearfix"])[1]/a'))
+      @minions = MountList.new(page.xpath('(//div[@class="minion_box clearfix"])[2]/a'))
+      #@profile.merge!(parser.get_profile)
     end
 
     private :initialise_profile
-  end
-  # A Object that represents a list of Gear pieces
-  # The initialiser takes a hash of items in the following layout
-  # { :weapon => ["Fist", 110, "Weapon", "http://...."], ... }
-  class GearList
-    def initialize(gear_list)
-      @list = Hash.new
-      gear_list.each do |key, value|
-        gear = Gear.new(value[0], value[1], value[2], value[3])
-        @list[key] = gear
-      end
-    end
-    # Calculates the total gear list ilevel
-    # Rounds to the nearest whole number like FFXIV ingame calculation
-    # returns a #Integer
-    def ilevel()
-      ilevel = 0
-      ilevel = @list[:weapon].ilevel if Helper.is_2hand_weapon(@list[:weapon].slot)
-      @list.each_value do |value|
-        ilevel += value.ilevel
-      end
-      (ilevel/13).round
-    end
-    # Uses gem Oj to dump GearList Object to JSON
-    def to_json()
-      Oj.dump(@list)
-    end
-    # Generates access methods for each item slot
-    def method_missing(method)
-      return @list[method] if @list.key?(method)
-      super
-    end
-    # A object representation of a peacie of gear.
-    # TODO Add more information
-    class Gear
-      attr_reader :name, :ilevel, :slot, :url
-
-      def initialize(name, ilevel, slot, url)
-        @name = name
-        @ilevel = ilevel
-        @slot = slot
-        @url = url
-      end
-    end
-  end
-  # A object representation of disciples(classes)
-  # The initialiser takes a hash of Disciple, that layout follows
-  # { :rogue => ["Rogue", 1, 0, 300, "http://..."] }
-  class DiscipleList
-    def initialize(disciple_list)
-      @list = Hash.new
-      disciple_list.each do |key, value|
-        disciple = Disciple.new(value[0], value[1], value[2], value[3], value[4])
-        @list[key.to_sym] = disciple
-      end
-      # Uses gem Oj to dump DiscipleList Object to JSON
-      def to_json()
-        Oj.dump(@list)
-      end
-      # Generates access methods for each disciple slot
-      def method_missing(method)
-        return @list[method] if @list.key?(method)
-        super
-      end
-    end
-    # A object representation of a disciple
-    class Disciple
-      attr_reader :name, :level, :current_exp, :total_exp, :icon_url
-
-      def initialize(name, level, curr, req, icon)
-        @name = name
-        @level = level
-        @current_exp = curr
-        @total_exp = req
-        @icon_url = icon
-      end
-      # Returns the required experience to the next level
-      def next_level()
-        @total_exp - @current_exp
-      end
-    end
   end
 end

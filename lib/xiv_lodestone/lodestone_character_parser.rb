@@ -23,10 +23,10 @@ module XIVLodestone
         exp = td[2].text.split(/\//)
 
         class_list[td[0].text.downcase.to_sym] = [td[0].text,
-          td[1].text.to_i,
-          exp[0].to_i,
-          exp[1].to_i,
-          td[0].at_css('img')['src']]
+                                                  td[1].text.to_i,
+                                                  exp[0].to_i,
+                                                  exp[1].to_i,
+                                                  td[0].at_css('img')['src']]
       end
       class_list
     end
@@ -53,9 +53,9 @@ module XIVLodestone
       @page.xpath("(//div[@class='item_detail_box'])[position() < 13]").each do |item|
         type = get_item_type(item.at_css('h3.category_name').text)
         items[type.to_sym] = [ item.css('h2').text,
-          item.at_css('div.pt3.pb3').text.split(/ /).last.to_i,
-          item.at_css('h3.category_name').text,
-          "http://na.finalfantasyxiv.com#{item.css('a')[0]['href']}" ]
+                               item.at_css('div.pt3.pb3').text.split(/ /).last.to_i,
+                               item.at_css('h3.category_name').text,
+                               "http://na.finalfantasyxiv.com#{item.css('a')[0]['href']}" ]
       end
       items
     end
@@ -122,7 +122,7 @@ module XIVLodestone
       mp = @page.at_xpath('//li[@class="mp"]')
       mp.nil? ? nil : mp.text.to_i
     end
-     # Returns a #Integer of the characters tp
+    # Returns a #Integer of the characters tp
     # otherwise returns nil
     def get_tp()
       tp = @page.at_xpath('//li[@class="tp"]')
