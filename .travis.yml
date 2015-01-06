@@ -2,6 +2,7 @@ language: ruby
 rvm:
 - 2.2.0
 sudo: false
+cache: bundler
 addons:
   code_climate:
     repo_token:

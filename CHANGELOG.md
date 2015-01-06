@@ -24,6 +24,13 @@ Bugfixes:
   - Refactored Paser#get_classes()., Parser#get_gear
 
 ## Alpha: 0.0.4 (2015-01-06)
+
+Features
   - Added new method to creating a Character class, Character.new("Benpi Kancho"), can pass name without server if you have an extremely rare name
-  - Added server name
+  - Added server name method
   - Character, DiscipleList, GearList class have had a to_json method added to them
+  - Added first_name and last_name methods
+  - Added minion parser + mounts parser
+  - swap to Beacon for testing
+
+Bugfixes
