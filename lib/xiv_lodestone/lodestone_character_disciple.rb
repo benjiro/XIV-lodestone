@@ -14,7 +14,7 @@ module XIVLodestone
     def to_json()
       Oj.dump(@disciple)
     end
-    # Generates access methods for each disciple slot
+    # Generates missing methods using @disciple hash keys
     def method_missing(method)
       return @disciple[method] if @disciple.key?(method)
       super
@@ -28,7 +28,7 @@ module XIVLodestone
           table[1].text.to_i,
           table[2].text.split(/\//)[0].to_i,
           table[2].text.split(/\//)[1].to_i,
-        table[0].at_css('img')['src'])
+          table[0].at_css('img')['src'])
       end
     end
 

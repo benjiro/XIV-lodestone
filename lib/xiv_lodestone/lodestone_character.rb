@@ -8,7 +8,11 @@ module XIVLodestone
   # A Object that represents a FFXIV:ARR character,
   # all information is obtained from the lodestone website.
   class Character
-    def initialize(*args)
+    # default constructor, handles styles of arguments
+    # 1. Character.new(:name => "CHARACTER_NAME", :server => "SERVER_NAME")
+    # 2. Character.new(:name => "CHARACTER_NAME")
+    # 3. Character.new(:id => ID_NUMBER)
+    def initialize(args = Hash.new)
       @profile = Hash.new()
       initialise_profile(Helper.process_args(args))
     end
@@ -20,15 +24,15 @@ module XIVLodestone
     def last_name()
       @profile[:name].split(/ /).last
     end
-
+    # Returns a #Array of characters mounts
     def mounts()
       @mounts.list
     end
-
+    # Returns a #Array of characters minions
     def minions()
       @minions.list
     end
-
+    # Generates missing methods from @profile hash keys
     def method_missing(method)
       return @profile[method] if @profile.key?(method)
       super
@@ -37,7 +41,8 @@ module XIVLodestone
     def to_json()
       Oj.dump(@profile)
     end
-
+    #### Private Methods ####
+    # Initialises all characters information from lodestone
     def initialise_profile(page)
       @profile[:name] = Helper.get_name(page)
       @profile[:server] = Helper.get_server(page)
@@ -61,6 +66,7 @@ module XIVLodestone
       @mounts = MountList.new(page.xpath('(//div[@class="minion_box clearfix"])[1]/a'))
       @minions = MountList.new(page.xpath('(//div[@class="minion_box clearfix"])[2]/a'))
     end
+
     private :initialise_profile
   end
 end

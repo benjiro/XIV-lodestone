@@ -16,13 +16,15 @@ module XIVLodestone
       return @attributes[method] if @attributes.key?(@attributes)
       super
     end
-
+    # Uses OJ to dump @attribute to json
+    def to_json()
+      Oj.dump(@attributes)
+    end
     #### Private Methods ####
     # Parsers attributes from a document into @attribute hash
     def parse_attributes(attribute_path)
       attribute_path.each_with_index do |li, index|
-        # For some weird reason the first 6 elements don't use span takes like
-        # the later.
+        # For some weird reason the first 6 elements don't use span tags like the rest.
         if index < 6
           @attributes[Helper.replace_downcase(li['class']).to_sym] = li.text.to_i
         else

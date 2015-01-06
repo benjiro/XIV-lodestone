@@ -9,7 +9,10 @@ module XIVLodestone
       @list = Array.new
       parse_mount(mount_path)
     end
-
+    # Uses gem Oj to dump MountList to JSON
+    def to_json()
+      Oj.dump(@list)
+    end
     #### Private Methods ####
     def parse_mount(mount_path)
       mount_path.each do |mount|

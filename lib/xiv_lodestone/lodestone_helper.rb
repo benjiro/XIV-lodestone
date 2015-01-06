@@ -13,15 +13,10 @@ module XIVLodestone
     # Validates arguments and calls corresponding method
     # Invalid arguments will rase a ArgumentError
     def self.process_args(args)
-      if args.count == 1 && args.all? {|x| x.is_a? Fixnum}
-        return Helper.open_id(args.first)
-      elsif args.count == 1 && args.all? {|x| x.is_a? String}
-        return Helper.open_url(args.first, "")
-      elsif args.count == 2 && args.all? {|x| x.is_a? String}
-        return Helper.open_url(args.at(0), args.at(1))
-      else
-        fail ArgumentError, "Invalid Arguments: player_id(Fixnum) or player_name(String), server_name(String)]"
-      end
+      return Helper.open_id(args[:id]) if args.key?(:id)
+      return Helper.open_url(args[:name], "") if args.key?(:name)
+      return Helper.open_url(args[:name], args[:server]) if args.size == 2
+      fail ArgumentError, "Invalid arguments passed"
     end
     # Find a character profile from a given name and
     # server. Returns a Nokogiri XML document of the
