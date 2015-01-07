@@ -9,6 +9,7 @@ submit a issue for bug or feature requests.
 
 ## Features
 - Character Search (via ID number or Name and Server)
+- To Json functionality
 - Character profile
   - name, server, portrait image url
   - HP, MP, TP
@@ -16,14 +17,14 @@ submit a issue for bug or feature requests.
   - Gear List - Shows item name, ilevel, slot, ffxiv db url, calculates total ilevel
   - Disciple List(Classes) - Shows class name, level, current exp, total exp, icon url, calculates experience to next level
   - All character attributes
+  - Mounts & Minions
+  - Server Status
 
 ## TODO
-- Server Status parser
+- Multi-Language support(JP,NA,DE,FR)
 - Job detection, soul crystal
-- To Json functionality
-- Achievements, Blogs, Friends list, Mounts, Pets
+- Achievements, Blogs, Friends list
 - Free Company Search/Gather Member information
-- Clean up smelly code 24/7
 
 ## Installation
 
@@ -48,14 +49,14 @@ directly taken from the lodestone naming conversation.
 
 ```ruby
 require 'xiv_lodestone'
-```  
+```
 
 To parse a character
 ```ruby
   character = XIVLodestone::Character("Benpi Kancho", "Tonberry")
   character = XIVLodestone::Character("Benpi Kancho")
   character = XIVLodestone::Character(1549391)
-```  
+```
 
 Basic examples
 
@@ -86,6 +87,8 @@ piercing, slashing, heavy_resistance, bind_resistance, sleep_resistance,
 stun_resistance, poison_resistance, blind_resistance, silence_resistance,
 slow_resistance
 
+character.attribute.str #=> character str #Integer
+
 # Available Gear Slot
 weapon, head, body, hands, belt, legs, feet, shield, necklace, earrings,
 bracelets, ring1, ring2
@@ -109,7 +112,29 @@ character.disciple.rogue.current_exp # => current experience #Interger
 character.disciple.rogue.total_exp # => total experience #Integer
 character.disciple.rogue.icon_url # => class icon url #String
 character.disciple.rogue.next_level # => experience to required to level #Integer
-```  
+
+# Mounts & Minions
+character.mounts.each do |mount|
+  puts mount.name
+  puts mount.icon_url
+end
+
+character.minions.each do |minion|
+  puts minion.name
+  puts minion.icon_url
+end
+
+character.minions #=> Returns a array of Minion
+character.mounts #=> Returns a array of mounts
+
+# To Json
+character.to_json
+character.mounts.to_json
+character.minions.to_json
+character.disciple.to_json
+character.gear.to_json
+character.attribute.to_json
+```
 
 ## Contributing
 

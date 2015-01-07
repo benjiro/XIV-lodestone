@@ -18,6 +18,11 @@ module XIVLodestone
       return Helper.open_url(args[:name], args[:server]) if args.size == 2
       fail ArgumentError, "Invalid arguments passed"
     end
+    # Opens the FFXIV server status page
+    # returns a Nokogiri document
+    def self.open_server_status()
+      Nokogiri::HTML(open("http://na.finalfantasyxiv.com/lodestone/worldstatus/"))
+    end
     # Find a character profile from a given name and
     # server. Returns a Nokogiri XML document of the
     # characters page.

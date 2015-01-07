@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'xiv_lodestone/lodestone_helper'
 require 'xiv_lodestone/lodestone_server'
 
 describe XIVLodestone::ServerStatus do

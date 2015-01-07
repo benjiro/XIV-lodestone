@@ -13,7 +13,7 @@ module XIVLodestone
     # 2. Character.new(:name => "CHARACTER_NAME")
     # 3. Character.new(:id => ID_NUMBER)
     def initialize(args = Hash.new)
-      @profile = Hash.new()
+      @profile = Hash.new
       initialise_profile(Helper.process_args(args))
     end
     # Returns a #String with characters first name

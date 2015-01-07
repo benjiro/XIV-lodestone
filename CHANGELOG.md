@@ -35,3 +35,8 @@ Features
 Bugfixes
   - Rewriting more comprehensive tests
   - Change the way Character.new arguments work
+  - Cleaned up code structure to be more modular
+
+## Alpha: 0.0.5 (2015-01-07)
+Features
+  - Added server status
