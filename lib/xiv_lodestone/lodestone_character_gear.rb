@@ -1,13 +1,17 @@
 require 'nokogiri'
-require 'oj'
+require 'json'
+require 'xiv_lodestone/lodestone_helper'
 
 module XIVLodestone
   # A Object that represents a list of Gear pieces
   # The initialiser takes a hash of items in the following layout
   # { :weapon => ["Fist", 110, "Weapon", "http://...."], ... }
   class GearList
+    # This struct representation a piece of gear.
+    Gear = Struct.new(:name, :ilevel, :slot, :url)
+
     def initialize(gear_path)
-      @items = Hash.new
+      @items = {}
       parse_gear(gear_path)
     end
     # Calculates the total gear list ilevel
@@ -15,15 +19,15 @@ module XIVLodestone
     # returns a #Integer
     def ilevel()
       ilevel = 0
-      ilevel = @items[:weapon].ilevel if Helper.is_2hand_weapon(@items[:weapon].slot)
+      ilevel = @items[:weapon].ilevel if @items[:shield].nil?
       @items.each_value do |value|
-        ilevel += value.ilevel
+        ilevel += value.ilevel unless value.name =~ /Soul of the/i
       end
       (ilevel/13).round
     end
-    # Uses gem Oj to dump GearList Object to JSON
+    # Returns a JSON string of all items
     def to_json()
-      Oj.dump(@items)
+      @items.to_json
     end
     # Generates access methods for each item slot
     def method_missing(method)
@@ -50,7 +54,7 @@ module XIVLodestone
       elsif name.eql?("Ring")
         return "ring#{ring_inc}"
       else
-        return name.downcase
+        return Helper.replace_downcase(name)
       end
     end
     # Initialise @num and count upwards, if @num >= 2 reset to 1
@@ -62,17 +66,5 @@ module XIVLodestone
     end
 
     private :parse_gear, :type, :ring_inc
-
-    # A object representation of a peacie of gear.
-    class Gear
-      attr_reader :name, :ilevel, :slot, :url
-
-      def initialize(name, ilevel, slot, url)
-        @name = name
-        @ilevel = ilevel
-        @slot = slot
-        @url = url
-      end
-    end
   end
 end

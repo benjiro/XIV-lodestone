@@ -13,10 +13,6 @@ describe XIVLodestone::Helper do
     expect { helper.open_url("#$%#FG", "Tonberry") }.to raise_error(URI::InvalidURIError)
   end
 
-  it 'Find multiple characters exception' do
-    expect { helper.open_url("Benpi", "") }.to raise_error(XIVLodestone::MoreThanOneCharacter)
-  end
-
   it 'No character found exception' do
     expect { helper.open_url("Yoloswaggings", "Tonberry") }.to raise_error(XIVLodestone::CharacterNotFound)
   end
@@ -32,11 +28,6 @@ describe XIVLodestone::Helper do
 
   it 'invalid arguments' do
     expect { helper.process_args(:server => "Tonberry")}. to raise_error(ArgumentError)
-  end
-
-  it 'Should/Shouldnt be a 2hand weapon' do
-    expect(helper.is_2hand_weapon("Two-handed Conjurer's Arm")).to be
-    expect(helper.is_2hand_weapon("Dogs Brekkie")).not_to be
   end
 
   it 'replace_downcase case test' do

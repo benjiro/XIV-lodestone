@@ -2,7 +2,8 @@ require 'xiv_lodestone/lodestone_helper'
 require 'xiv_lodestone/lodestone_character_gear'
 require 'xiv_lodestone/lodestone_character_disciple'
 require 'xiv_lodestone/lodestone_character_attribute'
-require 'xiv_lodestone/lodestone_character_mount'
+require 'xiv_lodestone/lodestone_character_collectable'
+require 'oj'
 
 module XIVLodestone
   # A Object that represents a FFXIV:ARR character,
@@ -12,25 +13,29 @@ module XIVLodestone
     # 1. Character.new(:name => "CHARACTER_NAME", :server => "SERVER_NAME")
     # 2. Character.new(:name => "CHARACTER_NAME")
     # 3. Character.new(:id => ID_NUMBER)
-    def initialize(args = Hash.new)
+    def initialize(args = {})
       @profile = Hash.new
       initialise_profile(Helper.process_args(args))
     end
     # Returns a #String with characters first name
-    def first_name()
+    def first_name
       @profile[:name].split(/ /).first
     end
     # Returns a #String with characters last name
-    def last_name()
+    def last_name
       @profile[:name].split(/ /).last
     end
     # Returns a #Array of characters mounts
-    def mounts()
+    def mounts
       @mounts.list
     end
     # Returns a #Array of characters minions
-    def minions()
+    def minions
       @minions.list
+    end
+    # Returns the current character job
+    def job
+      @profile[:gear].soul_crystal.name.gsub("Soul of the ", "")
     end
     # Generates missing methods from @profile hash keys
     def method_missing(method)
@@ -38,7 +43,7 @@ module XIVLodestone
       super
     end
     # Uses gem Oj to dump Character Object to JSON
-    def to_json()
+    def to_json
       Oj.dump(@profile)
     end
     #### Private Methods ####
@@ -61,10 +66,10 @@ module XIVLodestone
       @profile[:grand_company] = Helper.get_grand_company(page)
       @profile[:free_company] = Helper.get_free_company(page)
       @profile[:disciple] = DiscipleList.new(page.xpath("//table[@class='class_list']/tr/td"))
-      @profile[:gear] = GearList.new(page.xpath("(//div[@class='item_detail_box'])[position() < 13]"))
+      @profile[:gear] = GearList.new(page.xpath("(//div[@class='item_detail_box'])[position() < 14]"))
       @profile[:attribute] = AttributeList.new(page.xpath('//div[starts-with(@class, "param_left_area_inner")]/ul/li'))
-      @mounts = MountList.new(page.xpath('(//div[@class="minion_box clearfix"])[1]/a'))
-      @minions = MountList.new(page.xpath('(//div[@class="minion_box clearfix"])[2]/a'))
+      @mounts = CollectableList.new(page.xpath('(//div[@class="minion_box clearfix"])[1]/a'))
+      @minions = CollectableList.new(page.xpath('(//div[@class="minion_box clearfix"])[2]/a'))
     end
 
     private :initialise_profile

@@ -19,11 +19,11 @@ submit a issue for bug or feature requests.
   - All character attributes
   - Mounts & Minions
   - Server Status
+  - Job detection
 
 ## TODO
 - Multi-Language support(JP,NA,DE,FR)
-- Job detection, soul crystal
-- Achievements, Blogs, Friends list
+- Achievements
 - Free Company Search/Gather Member information
 
 ## Installation
@@ -53,9 +53,9 @@ require 'xiv_lodestone'
 
 To parse a character
 ```ruby
-  character = XIVLodestone::Character("Benpi Kancho", "Tonberry")
-  character = XIVLodestone::Character("Benpi Kancho")
-  character = XIVLodestone::Character(1549391)
+  character = XIVLodestone::Character(:name => "Benpi Kancho", :server => "Tonberry")
+  character = XIVLodestone::Character(:name => "Benpi Kancho")
+  character = XIVLodestone::Character(:id => 1549391)
 ```
 
 Basic examples

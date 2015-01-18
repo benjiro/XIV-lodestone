@@ -1,18 +1,25 @@
 require 'nokogiri'
-require 'oj'
+require 'json'
 
 module XIVLodestone
   # A object representation of disciples(classes)
   # The initialiser takes a hash of Disciple, that layout follows
   # { :rogue => ["Rogue", 1, 0, 300, "http://..."] }
   class DiscipleList
+    # This strct representents a disciple
+    Disciple = Struct.new(:name, :level, :current_exp, :total_exp, :icon_url) do
+      def next_level
+        total_exp - current_exp
+      end
+    end
+
     def initialize(disciple_path)
-      @disciple = Hash.new
+      @disciple = {}
       parse_disciple(disciple_path)
     end
-    # Uses gem Oj to dump DiscipleList Object to JSON
+    # Returns a json repsentation of all disciples
     def to_json()
-      Oj.dump(@disciple)
+      @disciple.to_json
     end
     # Generates missing methods using @disciple hash keys
     def method_missing(method)
@@ -33,22 +40,5 @@ module XIVLodestone
     end
 
     private :parse_disciple
-
-    # A object representation of a disciple
-    class Disciple
-      attr_reader :name, :level, :current_exp, :total_exp, :icon_url
-
-      def initialize(name, level, curr, req, icon)
-        @name = name
-        @level = level
-        @current_exp = curr
-        @total_exp = req
-        @icon_url = icon
-      end
-      # Returns the required experience to the next level
-      def next_level()
-        @total_exp - @current_exp
-      end
-    end
   end
 end

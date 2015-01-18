@@ -1,5 +1,5 @@
 require 'xiv_lodestone/lodestone_helper'
-require 'oj'
+require 'json'
 
 module XIVLodestone
   # A Object that represents a set of atrributes from
@@ -8,17 +8,17 @@ module XIVLodestone
   # names are based of names of attributes from lodestone website
   class AttributeList
     def initialize(attribute_path)
-      @attributes = Hash.new
+      @attributes = {}
       parse_attributes(attribute_path)
     end
     # Generate methods from each key in the @attribute hash
     def method_missing(method)
-      return @attributes[method] if @attributes.key?(@attributes)
+      return @attributes[method] if @attributes.key?(method)
       super
     end
-    # Uses OJ to dump @attribute to json
+    # Converts t
     def to_json()
-      Oj.dump(@attributes)
+      @attributes.to_json
     end
     #### Private Methods ####
     # Parsers attributes from a document into @attribute hash

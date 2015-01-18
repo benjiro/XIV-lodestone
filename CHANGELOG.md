@@ -37,6 +37,12 @@ Bugfixes
   - Change the way Character.new arguments work
   - Cleaned up code structure to be more modular
 
-## Alpha: 0.0.5 (2015-01-07)
+## Alpha: 0.0.5 (2015-01-08)
 Features
   - Added server status
+  - Added job detection
+
+Bugfixes
+  - Logic error in process_args
+  - Removed MoreThanOneCharacter exception(now picks the first character from result search)
+  - Now returns the first match if multiple characters
