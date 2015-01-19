@@ -53,9 +53,17 @@ require 'xiv_lodestone'
 
 To parse a character
 ```ruby
-  character = XIVLodestone::Character(:name => "Benpi Kancho", :server => "Tonberry")
-  character = XIVLodestone::Character(:name => "Benpi Kancho")
-  character = XIVLodestone::Character(:id => 1549391)
+  character = XIVLodestone::Character(name: "Benpi Kancho", :server: "Tonberry")
+  character = XIVLodestone::Character(name: "Benpi Kancho")
+  character = XIVLodestone::Character(id: 1549391)
+```
+
+Get server status
+```ruby
+  status = XIVLodestone::ServerStatus.new
+  status.tonberry.name #=> Returns a string server name
+  status.tonberry.registration #=> Returns a string Open or Closed(Character registration)
+  status.tonberry.status #=> Retuns a string Online or Offline
 ```
 
 Basic examples
@@ -78,6 +86,7 @@ character.nameday #=> character nameday #String
 character.guardian #=> character guardian #String
 character.city #=> character home city #String
 character.grand_company #=> character grand company #String
+character.job #=> characters current job
 
 # Character Attributes
 str, dex, vit, int, mnd, pie, fire, ice, wind, earth, lighting, water, accuracy,

@@ -3,7 +3,7 @@ require 'xiv_lodestone/lodestone_character_gear'
 require 'xiv_lodestone/lodestone_character_disciple'
 require 'xiv_lodestone/lodestone_character_attribute'
 require 'xiv_lodestone/lodestone_character_collectable'
-require 'oj'
+require 'json'
 
 module XIVLodestone
   # A Object that represents a FFXIV:ARR character,
@@ -44,7 +44,7 @@ module XIVLodestone
     end
     # Uses gem Oj to dump Character Object to JSON
     def to_json
-      Oj.dump(@profile)
+      @profile.to_json
     end
     #### Private Methods ####
     # Initialises all characters information from lodestone
