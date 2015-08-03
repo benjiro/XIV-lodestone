@@ -35,7 +35,7 @@ module XIVLodestone
     end
     # Returns the current character job
     def job
-      @profile[:gear].soul_crystal.name.gsub("Soul of the ", "")
+      @profile[:gear].soul_crystal.name.gsub("Soul of the ", "").delete!("\n\t")
     end
     # Generates missing methods from @profile hash keys
     def method_missing(method)
