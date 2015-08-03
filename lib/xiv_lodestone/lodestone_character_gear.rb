@@ -39,7 +39,7 @@ module XIVLodestone
     def parse_gear(gear_path)
       gear_path.each do |item|
         @items[type(item.at_css('h3.category_name').text).to_sym] = Gear.new(
-          item.css('h2').text.delete!("\n\t"),
+          item.css('h2').text,
           item.at_css('div.pt3.pb3').text.split(/ /).last.to_i,
           item.at_css('h3').text,
         "http://na.finalfantasyxiv.com#{item.at_css('a')['href']}")
