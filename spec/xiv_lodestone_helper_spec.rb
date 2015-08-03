@@ -5,8 +5,8 @@ describe XIVLodestone::Helper do
   let(:helper) { XIVLodestone::Helper }
 
   it 'Find character from name and server' do
-    page = helper.open_url("Benpi Kancho", "Tonberry")
-    expect(page.xpath('//h2/a')[0].text).to eq("Benpi Kancho")
+    page = helper.open_url("Benji Ro", "Tonberry")
+    expect(page.xpath('//h2/a')[0].text).to eq("Benji Ro")
   end
 
   it 'Invalid character name' do
@@ -19,7 +19,7 @@ describe XIVLodestone::Helper do
 
   it 'Find character from id' do
     page = helper.open_id("1549391")
-    expect(page.xpath('//h2/a')[0].text).to eql("Benpi Kancho")
+    expect(page.xpath('//h2/a')[0].text).to eql("Benji Ro")
   end
 
   it 'invalid character id' do
