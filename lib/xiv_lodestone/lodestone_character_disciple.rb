@@ -30,7 +30,7 @@ module XIVLodestone
     def parse_disciple(disciple_path)
       disciple_path.each_slice(3) do |table|
         next if table[0].text.empty? #skip empty cols
-        @disciple[table[0].text.downcase.to_sym] = Disciple.new(
+        @disciple[table[0].text.downcase.gsub(" ", "_").to_sym] = Disciple.new(
           table[0].text,
           table[1].text.to_i,
           table[2].text.split(/\//)[0].to_i,

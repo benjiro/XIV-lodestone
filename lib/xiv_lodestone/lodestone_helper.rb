@@ -102,22 +102,22 @@ module XIVLodestone
     end
     # Returns a #String with the nameday
     def self.get_nameday(page)
-      nameday = page.at_xpath('(//div[@class="chara_profile_table"]/dl/dd)[1]')
+      nameday = page.at_xpath('(//dd[@class="txt_name"])[1]')
       nameday ? nameday.text : ""
     end
     # Returns a #String with the guardian name
     def self.get_guardian(page)
-      guardian = page.at_xpath('(//div[@class="chara_profile_table"]/dl/dd)[2]')
+      guardian = page.at_xpath('(//dd[@class="txt_name"])[2]')
       guardian ? guardian.text : ""
     end
     # Returns a #String the city name
     def self.get_city(page)
-      city = page.at_xpath('(//dd[@class="txt_name"])[1]')
+      city = page.at_xpath('(//dd[@class="txt_name"])[3]')
       city ? city.text : ""
     end
     # Returns a #String with the grandcompany
     def self.get_grand_company(page)
-      company = page.at_xpath('(//dd[@class="txt_name"])[2]')
+      company = page.at_xpath('(//dd[@class="txt_name"])[4]')
       company ? company.text : ""
     end
     # Returns a #Array with the freecompany name and url

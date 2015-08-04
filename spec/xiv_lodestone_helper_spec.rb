@@ -37,8 +37,8 @@ describe XIVLodestone::Helper do
 
   it 'sucessful call of get methods' do
     valid = Nokogiri::HTML(open(LOCAL_FILE))
-    expect(helper.get_hp(valid)).to eq(4975)
-    expect(helper.get_mp(valid)).to eq(4819)
+    expect(helper.get_hp(valid)).to eq(10971)
+    expect(helper.get_mp(valid)).to eq(12393)
     expect(helper.get_tp(valid)).to eq(1000)
     expect(helper.get_sex(valid)).to eq("Male")
     expect(helper.get_race(valid)).to eq("Miqo'te")
@@ -46,7 +46,7 @@ describe XIVLodestone::Helper do
     expect(helper.get_nameday(valid)).to eq("27th Sun of the 1st Astral Moon")
     expect(helper.get_guardian(valid)).to eq("Oschon, the Wanderer")
     expect(helper.get_city(valid)).to eq("Gridania")
-    expect(helper.get_grand_company(valid)).to eq("Immortal Flames/Second Flame Lieutenant")
-    expect(helper.get_free_company(valid)).to eq(["Nomad Moogles", "http://na.finalfantasyxiv.com/lodestone/freecompany/9233505136016403440/"])
+    expect(helper.get_grand_company(valid)).to eq("Order of the Twin Adder/Second Serpent Lieutenant")
+    expect(helper.get_free_company(valid)).to eq(["Air Skip One", "http://na.finalfantasyxiv.com/lodestone/freecompany/9233505136016405449/"])
   end
 end
